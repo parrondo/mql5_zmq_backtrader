@@ -1,3 +1,10 @@
+.. figure:: images/puente-leonardo.jpg
+   :align: center
+   :scale: 40%
+   :alt: Puente de Leonardo.
+
+   *Zentree* `simpledesktops image`_
+
 ===================
 mql5_zmq_backtrader
 ===================
@@ -27,6 +34,11 @@ Features
 --------
 
 * TODO
+
+Example
+--------
+In order to call mql5_zmq_backtrader API, you need to sign up for a Metatrader broker account and obtain account keys. Replace trading accounts in the expert parameter setting with what you get from your broker.
+
 
 Credits
 -------
