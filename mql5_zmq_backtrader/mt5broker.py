@@ -8,7 +8,7 @@ from backtrader.utils.py3 import with_metaclass
 from backtrader.comminfo import CommInfoBase
 from backtrader.position import Position
 
-from mt5 import mt5store
+from mql5_zmq_backtrader import mt5store
 
 
 class MTraderCommInfo(CommInfoBase):

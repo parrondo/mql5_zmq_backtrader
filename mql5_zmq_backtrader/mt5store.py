@@ -6,7 +6,7 @@ import collections
 from datetime import datetime
 import threading
 
-from mt5.adapter import PositionAdapter, OrderAdapter, BalanceAdapter
+from mql5_zmq_backtrader.adapter import PositionAdapter, OrderAdapter, BalanceAdapter
 
 import backtrader as bt
 from backtrader.metabase import MetaParams
@@ -81,14 +81,14 @@ class MTraderAPI:
             self.data_socket.connect(
                 'tcp://{}:{}'.format(self.HOST, self.DATA_PORT))
         except zmq.ZMQError:
-            raise zmq.ZMQBindError("Binding ports ERROR")
+            raise zmq.ZMQBindError("E: Binding ports ERROR")
 
     def _send_request(self, data: dict) -> None:
         """Send request to server via ZeroMQ System socket
         Lazy Pirate implementation.
         """
         # ram Caller's name
-        print("Caller 2 ", sys._getframe(2).f_code.co_name)
+        print("I: Caller 2 ", sys._getframe(2).f_code.co_name)
 
         try:
             # ram sequence = 0
@@ -137,7 +137,7 @@ class MTraderAPI:
 
             # ram self.context.term()
         except zmq.ZMQError:
-            raise zmq.NotDone("Sending request ERROR")
+            raise zmq.NotDone("E: Sending request ERROR")
 
     def _pull_reply(self):
         # Get reply from server via Data socket with timeout
@@ -148,7 +148,7 @@ class MTraderAPI:
         except zmq.Again as e:
             return None
         except zmq.ZMQError as e:
-                logger.debug("Strange ZMQ behaviour during node-to-node message receiving, experienced {}".format(e))
+                logger.debug("W: Strange ZMQ behaviour during node-to-node message receiving, experienced {}".format(e))
         return msg
 
     def live_socket(self, context=None):
@@ -158,7 +158,7 @@ class MTraderAPI:
             socket = context.socket(zmq.PULL)
             socket.connect('tcp://{}:{}'.format(self.HOST, self.LIVE_PORT))
         except zmq.ZMQError:
-            raise zmq.ZMQBindError("Live port connection ERROR")
+            raise zmq.ZMQBindError("E: Live port connection ERROR")
         return socket
 
     def streaming_socket(self, context=None):
@@ -168,7 +168,7 @@ class MTraderAPI:
             socket = context.socket(zmq.PULL)
             socket.connect('tcp://{}:{}'.format(self.HOST, self.EVENTS_PORT))
         except zmq.ZMQError:
-            raise zmq.ZMQBindError("Data port connection ERROR")
+            raise zmq.ZMQBindError("E: Data port connection ERROR")
         return socket
 
     def construct_and_send(self, **kwargs) -> dict:
@@ -198,7 +198,7 @@ class MTraderAPI:
             if key in request:
                 request[key] = value
             else:
-                raise KeyError('Unknown key in **kwargs ERROR')
+                raise KeyError('E: Unknown key in **kwargs ERROR')
 
         # send dict to server
         self._send_request(request)
@@ -368,7 +368,7 @@ class MTraderStore(with_metaclass(MetaSingleton, object)):
     def get_granularity(self, timeframe, compression):
         granularity = self._GRANULARITIES.get((timeframe, compression), None)
         if granularity is None:
-            raise ValueError("Metatrader 5 doesn't support frame %s with compression %s" %
+            raise ValueError("W: Metatrader 5 doesn't support frame %s with compression %s" %
                              (bt.TimeFrame.getname(timeframe), compression))
         return granularity
 
@@ -420,7 +420,7 @@ class MTraderStore(with_metaclass(MetaSingleton, object)):
             try:
                 transaction = socket.recv_json()
             except zmq.ZMQError:
-                raise zmq.NotDone("Streaming data ERROR")
+                raise zmq.NotDone("E: Streaming data ERROR")
 
             self._transaction(transaction)
 
@@ -441,7 +441,7 @@ class MTraderStore(with_metaclass(MetaSingleton, object)):
         side = 'buy' if order.isbuy() else 'sell'
         order_type = self._ORDEREXECS.get((order.exectype, side), None)
         if order_type is None:
-            raise ValueError("Wrong order type: %s or side: %s" %
+            raise ValueError("W: Wrong order type: %s or side: %s" %
                              (order.exectype, side))
 
         okwargs['actionType'] = order_type
@@ -604,7 +604,7 @@ class MTraderStore(with_metaclass(MetaSingleton, object)):
     def check_account(self) -> None:
         """Get MetaTrader 5 account settings"""
         # ram Caller's name
-        print("Caller 3 ", sys._getframe(2).f_code.co_name)
+        print("I: Caller 3 ", sys._getframe(2).f_code.co_name)
 
         conf = self.oapi.construct_and_send(action="ACCOUNT")
 
