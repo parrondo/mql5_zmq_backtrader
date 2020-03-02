@@ -1,4 +1,4 @@
-.. figure:: images/puente-leonardo.jpg
+.. figure:: docs/images/puente-leonardo.jpg
    :align: center
    :scale: 40%
    :alt: Puente de Leonardo.
