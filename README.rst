@@ -1,9 +1,9 @@
 .. figure:: docs/images/puente-leonardo.jpg
    :align: center
-   :scale: 40%
+   :scale: 100%
    :alt: Puente de Leonardo.
 
-   *Zentree* `simpledesktops image`_
+
 
 ===================
 mql5_zmq_backtrader
